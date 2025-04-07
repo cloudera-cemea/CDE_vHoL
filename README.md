@@ -98,6 +98,9 @@ For more information on great-expectations also check out the docs: https://docs
 
 4. Notice the CDE Resource is now building the Python Virtual Environment. After a few minutes, the build will complete and you will be able to validate the libraries used. Validate that the "great-expectations" library was installed by searching for it.
 
+> [!NOTE]
+> The build **process may take a few minutes, proceed with the next steps** while the environment is building. You can come back later to verify that it has finished successfully. The final result should show the following:
+
 <img src="img/readme/cde_res_6.png" alt="image" width="800"/><br>
 
 To learn more about CDE Resources please visit [Using CDE Resources](https://docs.cloudera.com/data-engineering/cloud/use-resources/topics/cde-python-virtual-env.html) in the CDE Documentation.
@@ -118,11 +121,9 @@ With the repository set up, you will now create Spark Jobs based on your "create
 
 First, you will create the jobs for "**create.py**":
 
-1. Navigate back to the CDE home page. Click on "Create New" in the "Jobs" -> "Spark" section.
+1. Navigate back to the CDE home page. In the Quick Links section click on "New Spark Job".
 
-<img src="img/readme/cde_jobs_0.png" alt="image" width="600"/><br>
-
-2. Name your job e.g. "create" and select "Repository" as the "Application File" and choose the corresponding script.
+2. Select your Virtual Cluster, e.g. "virtual-cluster-123" for user123. Name your job e.g. "create" and select "Repository" as the "Application File" and choose the corresponding script.
 
 <img src="img/readme/cde_jobs_1.png" alt="image" width="400"/><br>
 
@@ -169,7 +170,7 @@ AssertionError: VALIDATION FOR SALES TABLE UNSUCCESSFUL: FOUND DUPLICATES IN [cu
 ...
 ```
 
-**Infobox: Monitoring CDE Spark Jobs**
+> [!NOTE] Monitoring CDE Spark Jobs
 > The Job Run is populated with Metadata, Logs, and the Spark UI. This information is persisted and can be referenced at a later point in time.
 > * The Configuration tab allows you to verify the script and resources used by the CDE Spark Job.
 > * The Logs tab contains rich logging information. For example, you can verify your code output under "Logs" -> "Driver" -> "stdout".
@@ -181,13 +182,17 @@ AssertionError: VALIDATION FOR SALES TABLE UNSUCCESSFUL: FOUND DUPLICATES IN [cu
 
 To address the data quality findings, you will now take advantage of the table format powering the Cloudera Data Lakehouse: [Apache Iceberg](./GLOSSARY.md#apache-iceberg). Using Iceberg's time travel capabilities in a CDE Interactive Session, you will be addressing the data quality issues you have found in the previous lab.
 
-> **⚠** It turns out there are quality issues with your data. **⚠** <br>
-> Your data quality checks have found that the **sales** table contains duplicates. <br>
-> It is your job now to troubleshoot and revert the table back to a healthy state if possible. <br>
+> [!NOTE]
+> * It turns out there are quality issues with your data.
+> * Your data quality checks have found that the **sales** table contains duplicates.
+> * It is your job now to troubleshoot and revert the table back to a healthy state if possible.
 
 ### Create an Interactive Session with Iceberg
 
-1. From your CDE home page, navigate to the "Sessions" tab to create your session. Name the session e.g. "user123-session".
+> [!CAUTION] 
+> For this lab, make sure you are using the shared Virtual Cluster "hol-shared-vc".
+
+1. From your CDE home page, navigate to the "Sessions" tab. Select the shared Virtual Cluster "hol-shared-vc" before creating your session. Name the session e.g. "user123-session".
 
 <img src="img/readme/ice_0.png" alt="image" width="500"/><br>
 
@@ -206,7 +211,7 @@ print(username)
 
 With your Interactive Session running, you will now confirm the data quality issues in the sales table.
 
-> **Infobox: Time Travel with Iceberg**
+> [!NOTE] Time Travel with Iceberg
 > * Recall the sales data is ingested in two batches, one for 2021, one for 2022.
 > * Iceberg creates a new snapshot with every write operation (inserts, updates, deletes).
 > * Note we're using the syntax `catalog.database.table.snapshots` to access the table history.
@@ -343,10 +348,10 @@ Now that the Airflow Job is busy sequentially running your Spark Jobs, explore h
 
 <img src="img/readme/cde_airflow_3.png" alt="image" width="1000"/><br>
 
-> **Infobox: More complex Airflow Jobs and Python code**
+> [!NOTE] More complex Airflow Jobs and Python code
 > * In order to view the Python code created by the visual editor, navigate to the Airflow UI by going to Administration > Virtual Cluster Details > Airflow UI. From there, you can navigate to the "Code" and inspect the code file that was automatically generated when you created the pipeline.
 > * As mentioned above, defining your pipeline using the (visual) Pipeline Editor is great for simple use cases, but you can always switch to defining your pipeline in Python code for more complex use cases.
-> * On top of that, Airflow offers hundreds of open-source modules for interacting with different systems!
+> * On top of that, Airflow offers hundreds of open-source modules for interacting with different systems.
 
 ```python
 ...
@@ -381,11 +386,11 @@ Following the approach described in **Option B** in the previous section [Addres
 
 This additional step just before the "validate" job should allow the complete pipeline to finish successfully!
 
-> **Infobox: Submit CDW queries from CDE Airflow Jobs**
+> [!NOTE] Submit CDW queries from CDE Airflow Jobs
 > * You can leverage CDE Airflow not only to orchestrate CDE internal Jobs, but any jobs running on CDP (and beyond).
 > * The pre-built Cloudera-supported Operators for CDE and CDW are also published here: https://github.com/cloudera/cloudera-airflow-plugins
 
-0. Create a Workload Password for your CDP User.
+1. Create a Workload Password for your CDP User.
 
 <img src="img/readme/cde_cli_0.png" alt="image" width="600"/><br>
 <img src="img/readme/cde_cli_1.png" alt="image" width="600"/><br>
@@ -398,15 +403,17 @@ This additional step just before the "validate" job should allow the complete pi
 
 <img src="img/readme/cde_airflow_con_1.png" alt="image" width="800"/><br>
 
+> [!IMPORTANT]
+> Use the following host name for the connection: hs2-gt-hol-vw-cde.dw-gt-hol-cdp-env.djki-j7ns.cloudera.site
 ```
 Conn Id: Connection name, e.g. "cdw-virtual-warehouse".
 Conn Type: Select "Hive Client Wrapper".
-Host: <virtual-warehouse-fqdn>, e.g. hs2-cde-hol-vw.dw-cde-hol-cdp-env.djki-j7ns.cloudera.site
+Host: <virtual-warehouse-fqdn>, see host name above
 Login: <username>
 Password: <workload-password>
 ```
 
-3. After the Connection is created, navigate back to your Airflow Job and open the Editor. Add a CDW query by dragging it onto the canvas. Edit the query below with your username and paste it into the CDW query.
+1. After the Connection is created, navigate back to your Airflow Job and open the Editor. Add a CDW query by dragging it onto the canvas. Edit the query below with your username and paste it into the CDW query.
 
 ```sql
 -- overwrite the sales table
@@ -463,7 +470,7 @@ Should give you a bash terminal in the CDE CLI container. Running the below shou
 cdeuser@8c2b6432370d:~$ cde job list
 ```
 
-### Alternatively: Set up the CDE CLI manually (not recommended)
+### Alternatively: Set up the CDE CLI manually
 
 If you do not have Docker installed, you may download and set up the CDE CLI binary directly by following the instructions provided in the [official documentation](https://docs.cloudera.com/data-engineering/cloud/cli-access/topics/cde-cli.html). Note that the configuration steps may differ slightly from the Docker setup based on your environment.
 
@@ -481,7 +488,7 @@ cdeuser@4b2fb5fe2cc5:~$ cde job run --name "pipeline"
 
 2. Verify from the CDE and Airflow UIs that the pipeline is running as expected.
 
-> **Infobox: Leveraging the CDE CLI**
+> [!NOTE] Leveraging the CDE CLI
 > * The CDE CLI allows you to manage the full life cycle of your applications on CDE.
 > * For some examples, please refer to the [CDE CLI Demo](https://github.com/pdefusco/CDE_CLI_demo), a more advanced CDE CLI reference with additional details for the CDE user who wants to move beyond the basics.
 

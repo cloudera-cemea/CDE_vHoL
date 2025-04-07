@@ -135,9 +135,8 @@ First, you will create the jobs for "**create.py**":
 
 <img src="img/readme/cde_jobs_2.png" alt="image" width="1000"/><br>
 
-### A Note on mounting File Resources to Spark Jobs in CDE
-
-FYI: Scroll down again and toggle the "Advanced" section. Here, under the "Resources" section you can notice that your Repository has been mapped to the Job by default. This allows your Spark application to access all files from the repository at runtime, such as the "resources_files/parameters.conf" file. Your Spark application can then access the file e.g. as shown in the ingest.py script:
+> [!NOTE] Mounting File Resources to Spark Jobs in CDE
+> Scroll down again and toggle the "Advanced" section. Here, under the "Resources" section you can notice that your Repository has been mapped to the Job by default. This allows your Spark application to access all files from the repository at runtime, such as the "resources_files/parameters.conf" file. Your Spark application can then access the file e.g. as shown in the ingest.py script:
 
 ```python
 config = configparser.ConfigParser()
@@ -162,7 +161,7 @@ S3_BUCKET = config.get("general", "s3BucketName")
 
 <img src="img/readme/cde_jobs_5.png" alt="image" width="1000"/><br>
 
-3. Solution: It turns out our sales table contains duplicates for the "customer_id" and "VIN" fields. That's not good, as each customer should only be able to buy a single car once!
+3. Suspected root cause: It turns out our sales table contains duplicates for the "customer_id" and "VIN" fields. That's not good, as each customer should only be able to buy a single car once!
 
 ```
 ...
@@ -315,19 +314,22 @@ You will also learn about:
 
 You can use the CDE Airflow Editor to build DAGs without writing code. This is a great option if your DAG consists of a long sequence of CDE Spark or CDW Hive jobs. In this section, you will build a simple pipeline to orchestrate the CDE Spark Jobs you created before.
 
-1. From the CDE home page, click on "Build a Pipeline" under the "Airflow Pipelines" section. Name your pipeline e.g. "pipeline". After confirming with "Create" you are taken to the CDE Pipeline Editor.
+1. From the CDE home page, click on "New Pipeline" in the "Quick Links" section. Name your pipeline e.g. "pipeline". After confirming by clicking on "Create" you are taken to the visual pipeline editor.
 
 <img src="img/readme/cde_airflow_0.png" alt="image" width="600"/><br>
 
-2. To build your pipeline, simply drag and drop 3 CDE Spark Jobs onto the canvas and select the previously created "create", "ingest" and "validate" Spark Jobs. If you need to delete connections between steps, use the DEL key.
+> [!TIP]
+> If the visual editor screen is not loading (blank screen), navigate to "Home" > "Virtual Clusters" > "Virtual Cluster Details" > "View Jobs". This will open a new browser tab which should fix this issue.
+
+1. To build your pipeline, simply drag and drop 3 CDE Spark Jobs onto the canvas and select the previously created "create", "ingest" and "validate" Spark Jobs. If you need to delete connections between steps, use the DEL key.
 
 <img src="img/readme/cde_airflow_1.png" alt="image" width="1000"/><br>
 
 3. Within the Visual Editor, configure the Airflow Job with the specs below to schedule it to run daily. Enable "catch_up" to allow the pipeline once after you save it. Close the configuration window again (your configs are saved automatically).
 
 ```
-start_date: yesterday's date, e.g. 2025-01-27
-end_date: some date in the future, e.g. 2025-01-29
+start_date: yesterday's date in YYYY-MM-DD format
+end_date: some date in the future in YYYY-MM-DD format
 schedule: @daily
 catch_up: true
 ```

@@ -71,10 +71,6 @@ CDP_PROFILE="<cdp-cli-profile>"
 bash create_vclusters.sh
 ```
 
-### 3. Create a Data Warehouse Service
-
-... #TODO
-
 ### 3. Configure Cloudera and Ranger Permissions
 
 #### Cloudera User Management

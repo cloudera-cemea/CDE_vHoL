@@ -1,20 +1,26 @@
 # Cloudera Data Engineering Hands-on Lab CEMEA Setup Guide
 
-This document provides a step-by-step guide to setting up a CDE environment and data lake for the CEMEA region. The setup includes creating a CDP environment, configuring CDE services, setting up Ranger permissions, uploading workshop data, and creating virtual clusters. The setup is designed to be executed on a Linux-based system with the necessary tools installed. The setup guide covers:
-- CDP Environment & Data Lake w/ RAZ enabled
-- CDE Service with Public Endpoints/CIDR
+This document provides a step-by-step guide to setting up Cloudera Services and Configurations for running the Hands-on Lab. The setup includes creating and configuring Cloudera services, setting up Ranger permissions and uploading workshop data. The setup is designed to be executed on a Linux-based system (e.g. macOS) with the necessary tools installed. The setup guide covers:
+
+- Cloudera on Cloud Environment & Data Lake w/ RAZ enabled
+- Cloudera Data Engineering Service with Public Endpoints/CIDR
 - Ranger Permissions for S3 Access
 - Workshop Data Upload
 - Virtual Clusters
 
 The following prequisites are required to execute the setup:
+
 - Terraform for deploying AWS prequisites and Cloudera infrastructure
 - AWS CLI with access to the AWS account (required for AWS prerequisites deployment via Terraform)
 - CDP CLI with access to the Cloudera tenant (required for Cloudera on Cloud deployment via Terraform)
 
 ## Setup Steps
 
-### 1. Create CDP Environment & Data Lake via the [Cloudera Terraform Quickstarts](https://github.com/cloudera-labs/cdp-tf-quickstarts.git):
+### 1. Create CDP Environment & Data Lake via the [Cloudera Terraform Quickstarts](https://github.com/cloudera-labs/cdp-tf-quickstarts.git)
+
+>[!Warning]
+>
+> You must use the `env_prefix` "cde-hol" in order for the remaining setup steps to work without additional configurations.
 
 - Edit the variables in the terraform.tfvars file, e.g.:
 
@@ -43,11 +49,15 @@ env_tags = {
 terraform apply
 ```
 
-### 2. Create CDE Service and Virtual Clusters
+### 2. Create a Data Engineering Service and Virtual Clusters
 
-- Create the CDE Service via the Control Plane UI
+1. Create the Data Engineering Service via the Control Plane UI with the following configurations:
 
-- Set the variables in the create_vclusters.sh script:
+- Enable Public Load Balancer
+- Disable Default Virtual Cluster
+- Everything else can be left with default values
+
+1. Create the Virtual Clusters by setting the variables in the create_vclusters.sh script:
 
 ```bash
 N_VCLUSTERS=<number-participants>
@@ -61,11 +71,16 @@ CDP_PROFILE="<cdp-cli-profile>"
 bash create_vclusters.sh
 ```
 
-### 3. Create Cloudera and Ranger Permissions
+### 3. Create a Data Warehouse Service
+
+... #TODO
+
+### 3. Configure Cloudera and Ranger Permissions
 
 #### Cloudera User Management
 
 For the Cloudera environment, enable access to the workshop user group by assigning following roles:
+
 - EnvironmentUser
 - DEUser
 - DWUser
@@ -74,6 +89,7 @@ For the Cloudera environment, enable access to the workshop user group by assign
 #### Ranger
 
 Add the workshop user group to the following Ranger policies for SQL/S3 access:
+
 - all storage url
 - all url
 - database table columns

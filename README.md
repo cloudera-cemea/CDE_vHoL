@@ -135,7 +135,8 @@ First, you will create the jobs for "**create.py**":
 
 <img src="img/readme/cde_jobs_2.png" alt="image" width="1000"/><br>
 
-> [!NOTE] Mounting File Resources to Spark Jobs in CDE
+> [!NOTE]
+> Mounting File Resources to Spark Jobs in CDE:
 > Scroll down again and toggle the "Advanced" section. Here, under the "Resources" section you can notice that your Repository has been mapped to the Job by default. This allows your Spark application to access all files from the repository at runtime, such as the "resources_files/parameters.conf" file. Your Spark application can then access the file e.g. as shown in the ingest.py script:
 
 ```python
@@ -169,8 +170,10 @@ AssertionError: VALIDATION FOR SALES TABLE UNSUCCESSFUL: FOUND DUPLICATES IN [cu
 ...
 ```
 
-> [!NOTE] Monitoring CDE Spark Jobs
-> The Job Run is populated with Metadata, Logs, and the Spark UI. This information is persisted and can be referenced at a later point in time.
+> [!NOTE]
+> Monitoring CDE Spark Jobs:
+>
+> * The Job Run is populated with Metadata, Logs, and the Spark UI. This information is persisted and can be referenced at a later point in time.
 > * The Configuration tab allows you to verify the script and resources used by the CDE Spark Job.
 > * The Logs tab contains rich logging information. For example, you can verify your code output under "Logs" -> "Driver" -> "stdout".
 > * The Spark UI allows you to visualize resources, optimize performance and troubleshoot your Spark Jobs.
@@ -181,15 +184,16 @@ AssertionError: VALIDATION FOR SALES TABLE UNSUCCESSFUL: FOUND DUPLICATES IN [cu
 
 To address the data quality findings, you will now take advantage of the table format powering the Cloudera Data Lakehouse: [Apache Iceberg](./GLOSSARY.md#apache-iceberg). Using Iceberg's time travel capabilities in a CDE Interactive Session, you will be addressing the data quality issues you have found in the previous lab.
 
-> [!NOTE]
+> [!WARNING]
+>
 > * It turns out there are quality issues with your data.
 > * Your data quality checks have found that the **sales** table contains duplicates.
 > * It is your job now to troubleshoot and revert the table back to a healthy state if possible.
 
 ### Create an Interactive Session with Iceberg
 
-> [!CAUTION] 
-> For this lab, make sure you are using the shared Virtual Cluster "hol-shared-vc".
+> [!CAUTION]
+> For this part of the workshop, make sure you are using the shared Virtual Cluster "hol-shared-vc".
 
 1. From your CDE home page, navigate to the "Sessions" tab. Select the shared Virtual Cluster "hol-shared-vc" before creating your session. Name the session e.g. "user123-session".
 
@@ -210,7 +214,9 @@ print(username)
 
 With your Interactive Session running, you will now confirm the data quality issues in the sales table.
 
-> [!NOTE] Time Travel with Iceberg
+> [!NOTE]
+> Time Travel with Iceberg:
+>
 > * Recall the sales data is ingested in two batches, one for 2021, one for 2022.
 > * Iceberg creates a new snapshot with every write operation (inserts, updates, deletes).
 > * Note we're using the syntax `catalog.database.table.snapshots` to access the table history.
@@ -350,7 +356,9 @@ Now that the Airflow Job is busy sequentially running your Spark Jobs, explore h
 
 <img src="img/readme/cde_airflow_3.png" alt="image" width="1000"/><br>
 
-> [!NOTE] More complex Airflow Jobs and Python code
+> [!NOTE]
+> More complex Airflow Jobs and Python code:
+>
 > * In order to view the Python code created by the visual editor, navigate to the Airflow UI by going to Administration > Virtual Cluster Details > Airflow UI. From there, you can navigate to the "Code" and inspect the code file that was automatically generated when you created the pipeline.
 > * As mentioned above, defining your pipeline using the (visual) Pipeline Editor is great for simple use cases, but you can always switch to defining your pipeline in Python code for more complex use cases.
 > * On top of that, Airflow offers hundreds of open-source modules for interacting with different systems.
@@ -388,9 +396,11 @@ Following the approach described in **Option B** in the previous section [Addres
 
 This additional step just before the "validate" job should allow the complete pipeline to finish successfully!
 
-> [!NOTE] Submit CDW queries from CDE Airflow Jobs
+> [!NOTE]
+> Submit CDW queries from CDE Airflow Jobs:
+>
 > * You can leverage CDE Airflow not only to orchestrate CDE internal Jobs, but any jobs running on CDP (and beyond).
-> * The pre-built Cloudera-supported Operators for CDE and CDW are also published here: https://github.com/cloudera/cloudera-airflow-plugins
+> * The pre-built Cloudera-supported Operators for CDE and CDW are also published here: <https://github.com/cloudera/cloudera-airflow-plugins>
 
 1. Create a Workload Password for your CDP User.
 
@@ -406,7 +416,8 @@ This additional step just before the "validate" job should allow the complete pi
 <img src="img/readme/cde_airflow_con_1.png" alt="image" width="800"/><br>
 
 > [!IMPORTANT]
-> Use the following host name for the connection: hs2-gt-hol-vw-cde.dw-gt-hol-cdp-env.djki-j7ns.cloudera.site
+> Use the following host name for the connection: #TODO
+
 ```
 Conn Id: Connection name, e.g. "cdw-virtual-warehouse".
 Conn Type: Select "Hive Client Wrapper".
@@ -490,7 +501,9 @@ cdeuser@4b2fb5fe2cc5:~$ cde job run --name "pipeline"
 
 2. Verify from the CDE and Airflow UIs that the pipeline is running as expected.
 
-> [!NOTE] Leveraging the CDE CLI
+> [!NOTE]
+> Leveraging the CDE CLI:
+>
 > * The CDE CLI allows you to manage the full life cycle of your applications on CDE.
 > * For some examples, please refer to the [CDE CLI Demo](https://github.com/pdefusco/CDE_CLI_demo), a more advanced CDE CLI reference with additional details for the CDE user who wants to move beyond the basics.
 

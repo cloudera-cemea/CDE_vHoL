@@ -60,15 +60,15 @@ terraform apply
 1. Create the Virtual Clusters by setting the variables in the create_vclusters.sh script:
 
 ```bash
+...
 N_VCLUSTERS=<number-participants>
-CLUSTER_ID="<cde-cluster-id>"
-CDP_PROFILE="<cdp-cli-profile>"
+...
 ```
 
 - Run the script to create virtual clusters:
 
 ```bash
-bash create_vclusters.sh
+bash setup.sh
 ```
 
 ### 3. Configure Cloudera and Ranger Permissions
@@ -86,10 +86,8 @@ For the Cloudera environment, enable access to the workshop user group by assign
 
 Add the workshop user group to the following Ranger policies for SQL/S3 access:
 
-- all storage url
-- all url
-- database table columns
-- raz/s3
+- hadoop sql: all storage url, all url, database table columns
+- s3: all bucket path
 
 ### 4. Upload workshop data
 
@@ -108,4 +106,11 @@ $ aws s3 ls s3://<bucket-name>/cde-hol-source --profile <aws-cli-profile> --recu
 2025-01-23 12:50:55      90249 cde-hol-source/2021/sales.csv
 2025-01-23 12:50:55        170 cde-hol-source/2022/customers.csv
 2025-01-23 12:50:55     238087 cde-hol-source/2022/sales.csv
+```
+
+- Edit the `parameters.conf` file with the bucket name
+
+```
+[general]
+s3BucketName: s3a://<bucket-name>/cde-hol-source
 ```

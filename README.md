@@ -115,7 +115,7 @@ From the CDE home page, navigate to Repositories > Create Repository.
     Credential: Leave blank
     TLS: Leave unchecked
 
-### Create and Run Your First CDE Spark Jobs
+### Create and Run Your First CDE Spark Job
 
 With the repository set up, you will now create Spark Jobs based on your "create.py" and "ingest.py" scripts. By decoupling Spark Jobs from application files, CDE allows you to fully manage, configure, schedule and monitor your Spark Jobs, rather than just running "spark-submit" commands (but of course you can still do that with CDE if you choose to).
 
@@ -131,19 +131,30 @@ First, you will create the jobs for "**create.py**":
 
 4. Confirm your "create" CDE Spark Job was created and executed successfully by browsing the "Job Runs" tab
 
-5. Repeat steps 1. through 4. for the "**ingest.py**" script. Both Jobs should have finished successfully!
 
-<img src="img/readme/cde_jobs_2.png" alt="image" width="1000"/><br>
+
+### Create and Run the "ingest" Job with Job Arguments
+
+Repeat the same steps to now create the Spark Job the "**ingest.py**", with the following addition:
+
+Under "Arguments", specify the S3 bucket provided by your workshop lead, e.g. "s3a://workshop-bucket/cde-hol-source"
+
+<img src="img/readme/cde_jobs_6.png" alt="image" width="1000"/><br>
 
 > [!NOTE]
-> Mounting File Resources to Spark Jobs in CDE:
-> Scroll down again and toggle the "Advanced" section. Here, under the "Resources" section you can notice that your Repository has been mapped to the Job by default. This allows your Spark application to access all files from the repository at runtime, such as the "resources_files/parameters.conf" file. Your Spark application can then access the file e.g. as shown in the ingest.py script:
+> Configuring and working with command line arguments:
+>
+> Cloudera Data Engineering allows you to configure and pass (positional) Arguments for Spark Jobs from the User Interface (or API/CLI). They can be processed in the Spark Application e.g. as shown in the ingest.py script:
 
 ```python
-config = configparser.ConfigParser()
-config.read("/app/mount/resources_files/parameters.conf")
-S3_BUCKET = config.get("general", "s3BucketName")
+try: S3_BUCKET = sys.argv[1]
+...
+print(f"LOADING DATA FROM S3 BUCKET: {S3_BUCKET}\n")
 ```
+
+Finally, confirm that the job finished successfully:
+
+<img src="img/readme/cde_jobs_2.png" alt="image" width="1000"/><br>
 
 ### Create and Run the "validate" Job with the created Python Virtual Environment
 

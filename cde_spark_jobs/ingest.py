@@ -1,5 +1,5 @@
 from pyspark.sql import SparkSession
-import configparser
+import sys
 
 
 # create spark session
@@ -8,10 +8,13 @@ spark = SparkSession.builder.appName("INGEST").getOrCreate()
 USERNAME = spark._sc.sparkUser()
 print(f"RUNNING AS USERNAME: {USERNAME}")
 
-# parse job configuration
-config = configparser.ConfigParser()
-config.read("/app/mount/resources_files/parameters.conf")
-S3_BUCKET = config.get("general", "s3BucketName")
+# parse job arguments
+try: S3_BUCKET = sys.argv[1]
+except: raise Exception("""
+S3_BUCKET not provided.
+The job requires a S3 bucket name as an argument, e.g. 'python ingest.py s3a://bucket'.
+Please review Job configuration and try again.
+""")
 print(f"LOADING DATA FROM S3 BUCKET: {S3_BUCKET}\n")
 
 for YEAR in ["2021", "2022"]:

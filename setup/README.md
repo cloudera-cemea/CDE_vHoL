@@ -51,6 +51,8 @@ terraform apply
 
 ### 2. Create a Data Engineering Service and Virtual Clusters
 
+#TODO: adjust to new automation script
+
 1. Create the Data Engineering Service via the Control Plane UI with the following configurations:
 
 - Enable Public Load Balancer
@@ -106,11 +108,4 @@ $ aws s3 ls s3://<bucket-name>/cde-hol-source --profile <aws-cli-profile> --recu
 2025-01-23 12:50:55      90249 cde-hol-source/2021/sales.csv
 2025-01-23 12:50:55        170 cde-hol-source/2022/customers.csv
 2025-01-23 12:50:55     238087 cde-hol-source/2022/sales.csv
-```
-
-- Edit the `parameters.conf` file with the bucket name
-
-```
-[general]
-s3BucketName: s3a://<bucket-name>/cde-hol-source
 ```

@@ -427,12 +427,12 @@ This additional step just before the "validate" job should allow the complete pi
 <img src="img/readme/cde_airflow_con_1.png" alt="image" width="800"/><br>
 
 > [!IMPORTANT]
-> Use the following host name for the connection: hs2-cde-hol-vw.dw-cde-hol-cdp-env.sm02r9.b0.cloudera.site
+> Use the following host name for the connection: hs2-pla-ice-bxl-hive-001.dw-pla-ice-bxl-cdp-env.sm02r9.b0.cloudera.site
 
 ```
 Conn Id: Connection name, e.g. "cdw-virtual-warehouse".
 Conn Type: Select "Hive Client Wrapper".
-Host: hs2-cde-hol-vw.dw-cde-hol-cdp-env.sm02r9.b0.cloudera.site
+Host: hs2-pla-ice-bxl-hive-001.dw-pla-ice-bxl-cdp-env.sm02r9.b0.cloudera.site
 Login: <username>
 Password: <workload-password>
 ```

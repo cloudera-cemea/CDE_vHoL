@@ -1,5 +1,4 @@
 from pyspark.sql import SparkSession
-from great_expectations.dataset.sparkdf_dataset import SparkDFDataset
 
 
 # create spark session

@@ -320,7 +320,7 @@ Would result in a new snapshot. Note the **overwrite** snapshot as a result of t
 
 ### Overview
 
-You have already created and executed Spark Jobs manually via the CDE UI. In this section, you will learn how to create Airflow Jobs to schedule, orchestrate and monitor the execution of data pipelines consisting of multiple Spark Jobs on CDE. You will also implement **Option B** for addressing the quality issues by connecting to a CDW Virtual Warehouse.
+You have already created and executed Spark Jobs manually via the CDE UI. In this section, you will learn how to create Airflow Jobs to schedule, orchestrate and monitor the execution of data pipelines consisting of multiple Spark Jobs on CDE. You will also implement **Option B** for addressing the quality issues.
 
 You will also learn about:
 - Navigating the Airflow UI

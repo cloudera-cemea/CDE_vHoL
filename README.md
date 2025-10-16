@@ -401,60 +401,24 @@ cde_job_2 << [cde_job_1]        # <-- dependencies between jobs are defined here
 cde_job_3 << [cde_job_2]
 ```
 
-### Add a CDWOperator to the Pipeline to Address Data Quality Issues
+### Add a correction job to adress the Data Quality Issues
 
-Following the approach described in **Option B** in the previous section [Address Data Quality with Iceberg](#options-for-reverting-the-table-to-an-uncorrupted-state), you will leverage the CDWOperator to implement the "INSERT OVERWRITE" query directly from your Airflow Job.
+Following the approach described in **Option B** in the previous section [Address Data Quality with Iceberg](#options-for-reverting-the-table-to-an-uncorrupted-state). This is implemented for you in [**correct.py**](https://github.com/cloudera-cemea/CDE_vHoL/blob/main/cde_spark_jobs/correct.py)
 
-This additional step just before the "validate" job should allow the complete pipeline to finish successfully!
-
-> [!NOTE]
-> Submit CDW queries from CDE Airflow Jobs:
->
-> * You can leverage CDE Airflow not only to orchestrate CDE internal Jobs, but any jobs running on CDP (and beyond).
-> * The pre-built Cloudera-supported Operators for CDE and CDW are also published here: <https://github.com/cloudera/cloudera-airflow-plugins>
-
-1. Create a Workload Password for your CDP User.
-
-<img src="img/readme/cde_cli_0.png" alt="image" width="600"/><br>
-<img src="img/readme/cde_cli_1.png" alt="image" width="600"/><br>
-
-1. Add an Airflow Connection to securely connect from CDE to a CDW Virtual Warehouse. From the CDE home page, click on the Virtual Cluster Details for your virtual cluster. From there, navigate to the Airflow UI.
-
-<img src="img/readme/cde_airflow_con_0.png" alt="image" width="700"/><br>
-
-2. In the Airflow UI, navigate to the "Admin" -> "Connection" section. Click the plus sign to add a new Airflow Connection, and then fill in the fields:
-
-<img src="img/readme/cde_airflow_con_1.png" alt="image" width="800"/><br>
-
-> [!IMPORTANT]
-> Use the following host name for the connection: hs2-pla-ice-bxl-hive-001.dw-pla-ice-bxl-cdp-env.sm02r9.b0.cloudera.site
-
-```
-Conn Id: Connection name, e.g. "cdw-virtual-warehouse".
-Conn Type: Select "Hive Client Wrapper".
-Host: hs2-pla-ice-bxl-hive-001.dw-pla-ice-bxl-cdp-env.sm02r9.b0.cloudera.site
-Login: <username>
-Password: <workload-password>
+```python
+sales_df = spark.sql(f"SELECT * FROM car_data_{USERNAME}.sales")
+sales_df = sales_df.dropDuplicates(["customer_id", "VIN"])
+sales_df.createOrReplaceTempView("sales_df")
+spark.sql(f"INSERT OVERWRITE car_data_{USERNAME}.sales SELECT * FROM sales_df")
 ```
 
-1. After the Connection is created, navigate back to your Airflow Job and open the Editor. Add a CDW query by dragging it onto the canvas. Edit the query below with your username and paste it into the CDW query.
+Follow the steps below to insert the correction job before validation to allow the complete pipeline to finish successfully!
 
-```sql
--- overwrite the sales table
--- with unique records only
-INSERT OVERWRITE
-TABLE car_data_<username>.sales
-SELECT DISTINCT *
-FROM car_data_<username>.sales
-```
-
-<img src="img/readme/cde_airflow_7.png" alt="image" width="1000"/><br>
-
-4. Edit the dependencies between your jobs to make sure the jobs are executed in the following order:
+1. Edit the dependencies between your jobs to make sure the jobs are executed in the following order:
 
 <img src="img/readme/cde_airflow_5.png" alt="image" width="1000"/><br>
 
-5. Save the pipeline to make the changes effective. Next, return to the "Jobs" tab and run the pipeline manually. After a while, you should see the pipeline has finished successfully this time!
+2. Save the pipeline to make the changes effective. Next, return to the "Jobs" tab and run the pipeline manually. After a while, you should see the pipeline has finished successfully this time!
 
 <img src="img/readme/cde_airflow_6.png" alt="image" width="500"/><br>
 

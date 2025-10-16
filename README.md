@@ -137,7 +137,7 @@ First, you will create the jobs for "**create.py**":
 
 Repeat the same steps to now create the Spark Job the "**ingest.py**", with the following addition:
 
-Under "Arguments", specify the S3 bucket provided by your workshop lead, e.g. "s3a://workshop-bucket/cde-hol-source"
+Under "Arguments", specify the S3 bucket provided by your workshop lead, e.g. "s3a://cde-hol-buk-5ba7cabb/cde-hol-source"
 
 <img src="img/readme/cde_jobs_6.png" alt="image" width="1000"/><br>
 
@@ -414,9 +414,11 @@ spark.sql(f"INSERT OVERWRITE car_data_{USERNAME}.sales SELECT * FROM sales_df")
 
 Follow the steps below to insert the correction job before validation to allow the complete pipeline to finish successfully!
 
-1. Edit the dependencies between your jobs to make sure the jobs are executed in the following order:
+1. First, create a new Spark Job for the "**correct.py**" job as practiced in Lab 1
 
-<img src="img/readme/cde_airflow_5.png" alt="image" width="1000"/><br>
+2. Add the new job to your pipeline by editing the dependencies between your jobs in the following way:
+
+<img src="img/readme/cde_airflow_8.png" alt="image" width="1000"/><br>
 
 2. Save the pipeline to make the changes effective. Next, return to the "Jobs" tab and run the pipeline manually. After a while, you should see the pipeline has finished successfully this time!
 
